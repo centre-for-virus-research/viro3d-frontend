@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import ReactGA from "react-ga4";
-import Navbar from "./components/ui/Navbar";
+import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import StructureIndex from "./pages/StructureIndex";
 import Footer from "./components/ui/Footer";
