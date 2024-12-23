@@ -1,0 +1,37 @@
+/* WebKit Browsers (Chrome, Edge, Safari) */
+.genome-browser-custom-scrollbar::-webkit-scrollbar {
+  -webkit-appearance: none;
+  height: 6px;
+  background-color: #bec4cc;
+}
+
+.genome-browser-custom-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 0px;
+  background-color: #7d8ea4;
+  box-shadow: 0 0 0px rgba(255, 255, 255, 0.5);
+}
+
+.genome-browser-custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #4a95c0;
+}
+
+.custom-no-scrollbar::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 0px;
+}
+
+.clusters-custom-scrollbar::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 6px;
+  background-color: #e6e6e6;
+}
+
+.clusters-custom-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 0px;
+  background-color: #c2c2c2;
+  box-shadow: 0 0 0px rgba(255, 255, 255, 0.5);
+}
+
+.clusters-custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #9b9a9a;
+}

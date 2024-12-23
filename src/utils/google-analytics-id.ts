@@ -1,0 +1,1 @@
+export const tracking_id = import.meta.env.VITE_TRACKING_ID;
