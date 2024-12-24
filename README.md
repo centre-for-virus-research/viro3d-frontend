@@ -7,6 +7,7 @@ This is the frontend web app for Viro3D.
 ```PDBE-Molstar```
 ```KonvaJS```
 ```Sodaviz```
+```Tailwind CSS```
 
 # Prerequisites
 
