@@ -67,7 +67,7 @@ const ClustersContainer: React.FC<ClustersContainerProps> = ({
       <tr
         key={member.member_record_id}
         onClick={() =>
-          navigate(`/structureindex/${member.virus_name}/${member.member_record_id}`)
+          navigate(`/structureindex/${encodeURIComponent(member.virus_name)}/${member.member_record_id}`)
         }
         className={`cursor-pointer xs:text-xs md:text-base ${
           isSelected ? "bg-[#4a95c0] text-white" : "hover:bg-[#e6e6e6]"
