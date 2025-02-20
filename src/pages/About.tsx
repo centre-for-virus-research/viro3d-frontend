@@ -110,6 +110,19 @@ const About: React.FC = () => {
             models and the ESMFold models that achieved higher confidence than
             their AlphaFold2-ColabFold counterparts.{" "}
           </p>
+          <div className="flex justify-center">
+            <img
+              className="items-center border-black rounded"
+              alt="CC-BY Logo"
+              src="/cc_by.png"
+              width="250"
+            ></img>
+          </div>
+          <div>
+            <p className="text-center">
+              Our structural models are shared under a CC-BY licence.
+            </p>
+          </div>
         </div>
       ),
     },
@@ -319,7 +332,9 @@ const About: React.FC = () => {
             href="https://www.biorxiv.org/content/10.1101/2024.12.19.629443v1"
             target="_blank"
             rel="noreferrer"
-            className={`xs:text-xl lg:text-3xl text-[#4a95c0] hover:text-[#50bde5] xs:text-center md:text-left hover:underline ${isMobile ? "underline" : ""} font-semibold`}
+            className={`xs:text-xl lg:text-3xl text-[#4a95c0] hover:text-[#50bde5] xs:text-center md:text-left hover:underline ${
+              isMobile ? "underline" : ""
+            } font-semibold`}
           >
             Viro3D: a comprehensive database of virus protein structure
             predictions
