@@ -9,6 +9,9 @@ import {
   CustomRenderParams,
   AnnotationDatum,
   CustomAnnotation,
+  Viro3DAnnotationGroup,
+  Viro3DChart,
+  Viro3DRenderParams,
 } from "../../types/feauturebrowser";
 
 const FeatureBrowser: React.FC<CustomRenderParams> = ({
@@ -23,23 +26,40 @@ const FeatureBrowser: React.FC<CustomRenderParams> = ({
       oldStyle: string | null | undefined;
     }[]
   >([]);
-
-  const featureViewerRef = useRef<Chart<CustomRenderParams> | null>(null);
-
   const navigate = useNavigate();
+
+  const annotation_groups: Viro3DAnnotationGroup[] = [];
+
+  const unique = [...new Set(annotations.map((item) => item.family))];
+
+  unique.forEach((item) => {
+    annotation_groups.push(
+      new Viro3DAnnotationGroup({
+        annotations: annotations.filter((a) => a.family === item),
+      })
+    );
+  });
+
+  const featureViewerRef = useRef<Viro3DChart | null>(null);
 
   //NEED to replace '.' in record id with '_' so that it is valid syntax for a query selector
 
   const id = annotations[0].nt_acc.replace(".", "_");
 
   //The variable 'all' is all the gene objects, excluding the line objects for joins, hence we filter for objects where 'a.join' is 'none'
-  let all = annotations.filter((a) => a.join == "none");
-  let leftJoin = annotations.filter((a) => a.join == "left-join");
-  let rightJoin = annotations.filter((a) => a.join == "right-join");
+
+  let allAnnotations: CustomAnnotation[] = annotation_groups.flatMap(
+    (group) => group.annotations
+  );
+  let all = allAnnotations.filter((a) => a.join == "none");
+  let leftJoin = allAnnotations.filter((a) => a.join == "left-join");
+  let rightJoin = allAnnotations.filter((a) => a.join == "right-join");
   let protein = all.filter((a) => a.pept_cat == "protein");
   let region = all.filter((a) => a.pept_cat == "region");
   let mat_pept = all.filter((a) => a.pept_cat == "mat_pept");
-  let selectedProtein = annotations.find(({ family }) => family === recordID);
+  let selectedProtein = allAnnotations.find(
+    ({ family }) => family === recordID
+  );
 
   async function highlightSelectedGene() {
     //check to see if there is already a gene highlighted and stored in state
@@ -86,7 +106,6 @@ const FeatureBrowser: React.FC<CustomRenderParams> = ({
   const autoZoom = () => {
     //finds selected protein by taking the recordID and filtering annotations for objetcs that match by the family property
     //it subtracts the start coordinate from the end coordinate and divides it by 2
-    // console.log(selectedProtein?.end)
     if (selectedProtein) {
       let boundary =
         (30000 - (selectedProtein.end - selectedProtein.start)) / 2;
@@ -97,14 +116,12 @@ const FeatureBrowser: React.FC<CustomRenderParams> = ({
 
       // if the start coordinate is < 30000, it will result in a negative number, so in this case start is set to 0
 
-      // if (end > domainConstraint[1]) {end = domainConstraint[1]}
-
       if (start < 0) {
         start = 0;
       }
 
       return {
-        annotations,
+        annotations: annotation_groups,
         start,
         end,
         recordID,
@@ -114,7 +131,7 @@ const FeatureBrowser: React.FC<CustomRenderParams> = ({
     }
 
     return {
-      annotations,
+      annotations: annotation_groups,
       start: 0,
       end: genome_length_bp,
       recordID,
@@ -125,7 +142,7 @@ const FeatureBrowser: React.FC<CustomRenderParams> = ({
 
   useEffect(() => {
     if (!featureViewerRef.current) {
-      featureViewerRef.current = new soda.Chart<CustomRenderParams>({
+      featureViewerRef.current = new Viro3DChart({
         selector: `div#${id}`,
         zoomable: true,
         rowHeight: 25,
@@ -192,7 +209,7 @@ const FeatureBrowser: React.FC<CustomRenderParams> = ({
               // s is a d3 Selection of the glyph in the DOM
               _s: d3.Selection<any, any, any, any>,
               // d is the AnnotationDatum bound to the glyph
-              d: AnnotationDatum<CustomAnnotation, Chart<CustomRenderParams>>
+              d: AnnotationDatum<CustomAnnotation, Chart<Viro3DRenderParams>>
             ) =>
               navigate(
                 `/structureindex/${encodeURIComponent(d.a.virus_name)}/${
@@ -228,7 +245,7 @@ const FeatureBrowser: React.FC<CustomRenderParams> = ({
         featureViewerRef.current.render(zoomParams);
       } else {
         featureViewerRef.current.render({
-          annotations,
+          annotations: annotation_groups,
           start: 0,
           end: genome_length_bp,
           recordID,
