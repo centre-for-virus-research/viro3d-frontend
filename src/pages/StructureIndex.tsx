@@ -1,19 +1,18 @@
-import React, { useEffect } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
+const ClustersContainer = lazy(() => import("../components/ClustersContainer"));
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 import PdbeMolstar from "../components/ui/PdbeMolstar";
 import ProteinInfo from "../components/ProteinInfo";
+import PdbeMolstartLegend from "../components/ui/PdbeMolstarLegned";
 import FeatureBrowserContainer from "../components/FeatureBrowserContainer";
 import { useStructureIndexData } from "../hooks/useStructureIndexData";
 import { useGenomeCoordinates } from "../hooks/useGenomeCoordinates";
-import LoadingSpinner from "../components/ui/LoadingSpinner";
-import PdbeMolstartLegend from "../components/ui/PdbeMolstarLegned";
+import { useClusters } from "../hooks/useClusters";
 import { isMobile } from "react-device-detect";
 import { api_url } from "../utils/api";
-import { useClusters } from "../hooks/useClusters";
-import ClustersContainer from "../components/ClustersContainer";
 
 const StructureIndex: React.FC = () => {
-
   const { filterParam, searchParam } = useParams();
 
   const { coordinates, isLoading: genomeLoading } = useGenomeCoordinates(
@@ -70,7 +69,6 @@ const StructureIndex: React.FC = () => {
                 isolate={proteinInfo.Virus_isolate_designation}
               />
             ) : null}
-
             <div className="mobile-heading lg:hidden ">
               <h1 className="mx-12 text-2xl text-slate-500 ">
                 {proteinInfo["genbank_name_curated"]}
@@ -153,17 +151,19 @@ const StructureIndex: React.FC = () => {
                 </div>
               </div>
               <div className="">
-              <div className="clusters-container w-full  mt-2">
-                {clusters &&
-                clusters?.clusters[0].cluster_members.length > 1 &&
-                searchParam ? (
-                  <ClustersContainer
-                    clusters={clusters}
-                    clustersLoading={clustersLoading}
-                    searchParam={searchParam}
-                  />
-                ) : null}
-              </div>
+                <div className="clusters-container w-full  mt-2">
+                  {clusters &&
+                  clusters?.clusters[0].cluster_members.length > 1 &&
+                  searchParam ? (
+                    <Suspense fallback={null}>
+                      <ClustersContainer
+                        clusters={clusters}
+                        clustersLoading={clustersLoading}
+                        searchParam={searchParam}
+                      />
+                    </Suspense>
+                  ) : null}
+                </div>
               </div>
             </div>
           </>

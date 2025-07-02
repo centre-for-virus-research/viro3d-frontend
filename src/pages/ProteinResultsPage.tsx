@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import AdvancedSearch from "../components/ui/AdvancedSearch";
 import ProteinStructureResults from "../components/ProteinStructureResults";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 import Pagination from "../components/ui/Pagination";
@@ -7,7 +8,6 @@ import FeatureBrowserContainer from "../components/FeatureBrowserContainer";
 import { useGenomeCoordinates } from "../hooks/useGenomeCoordinates";
 import { useProteins } from "../hooks/useProteins";
 import { isMobile } from "react-device-detect";
-import AdvancedSearch from "../components/ui/AdvancedSearch";
 
 const ProteinResultsPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);

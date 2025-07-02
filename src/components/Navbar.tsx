@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { lazy, Suspense, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
 import { useAutocomplete } from "../hooks/useAutocomplete";
-import SearchBar from "./ui/SearchBar";
-import MobileSearchBar from "./ui/MobileSearchBar";
 import NavLinks from "./ui/NavLinks";
-import MobileNavLinks from "./ui/MobileNavLinks";
+import SearchBar from "./ui/SearchBar";
+const MobileNavLinks = lazy(() => import("./ui/MobileNavLinks"));
+const MobileSearchBar = lazy(() => import("./ui/MobileSearchBar"));
 
 type Link = {
   title: string;
@@ -145,24 +145,28 @@ const Navbar: React.FC = () => {
         </div>
         {isMobileMenuOpen ? (
           <div className=" z-10 h-[20vh] w-full">
-            <MobileNavLinks
-              toggleMobileMenu={toggleMobileMenu}
-              isMobileMenuOpen={isMobileMenuOpen}
-            />
-            <div className="mobilesearchbar pl-4 pr-4 ">
-              <MobileSearchBar
-                data={data}
-                isAutoCompleteOpen={isAutoCompleteOpen}
-                setIsAutoCompleteOpen={setIsAutoCompleteOpen}
-                suggestion={suggestion}
-                clearSuggestion={clearSuggestion}
-                handleSubmit={handleSubmit}
-                handleFilter={handleFilter}
-                searchParam={searchParam}
-                filterParam={filterParam}
-                handleText={handleText}
-                clearSearch={clearSearch}
+            <Suspense fallback={null}>
+              <MobileNavLinks
+                toggleMobileMenu={toggleMobileMenu}
+                isMobileMenuOpen={isMobileMenuOpen}
               />
+            </Suspense>
+            <div className="mobilesearchbar pl-4 pr-4 ">
+              <Suspense fallback={null}>
+                <MobileSearchBar
+                  data={data}
+                  isAutoCompleteOpen={isAutoCompleteOpen}
+                  setIsAutoCompleteOpen={setIsAutoCompleteOpen}
+                  suggestion={suggestion}
+                  clearSuggestion={clearSuggestion}
+                  handleSubmit={handleSubmit}
+                  handleFilter={handleFilter}
+                  searchParam={searchParam}
+                  filterParam={filterParam}
+                  handleText={handleText}
+                  clearSearch={clearSearch}
+                />
+              </Suspense>
             </div>
           </div>
         ) : null}
