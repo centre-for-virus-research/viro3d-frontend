@@ -1,18 +1,19 @@
-import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import ReactGA from "react-ga4";
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import StructureIndex from "./pages/StructureIndex";
-import Footer from "./components/ui/Footer";
-import ProteinResultsPage from "./pages/ProteinResultsPage";
-import VirusResultsPage from "./pages/VirusResultsPage";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { Route, Routes } from "react-router-dom";
 import About from "./pages/About";
-import { tracking_id } from "./utils/google-analytics-id";
-import { useEffect, useState } from "react";
+const API = lazy(() => import("./pages/API"));
+import Home from "./pages/Home";
+const NotFound = lazy(() => import("./pages/NotFound"));
+import ProteinResultsPage from "./pages/ProteinResultsPage";
+import StructureIndex from "./pages/StructureIndex";
+const VirusResultsPage = lazy(() => import("./pages/VirusResultsPage"));
+import Footer from "./components/ui/Footer";
+import LoadingSpinner from "./components/ui/LoadingSpinner";
+import Navbar from "./components/Navbar";
 import { CookieConsent } from "react-cookie-consent";
-import API from "./pages/API";
-import NotFound from "./pages/NotFound";
+import ReactGA from "react-ga4";
+import { tracking_id } from "./utils/google-analytics-id";
 
 function App() {
   const [hasConsented, setHasConsented] = useState<boolean | null>(false);
@@ -30,11 +31,53 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />}></Route>
-          <Route path="/about" element={<About />}></Route>
-          <Route path="/docs" element={<API />}></Route>
+          <Route
+            path="/about"
+            element={
+              <Suspense
+                fallback={
+                  <div className="min-h-screen xs:mt-24 sm:mt-32 xs:mb-4 sm:mb-32 sm:my-auto sm:mx-4 lg:mx-8 2xl:mx-24">
+                    <div className="flex items-center justify-center gap-12">
+                      <LoadingSpinner />
+                    </div>
+                  </div>
+                }
+              >
+                <About />
+              </Suspense>
+            }
+          ></Route>
+          <Route
+            path="/docs"
+            element={
+              <Suspense
+                fallback={
+                  <div className="min-h-screen xs:mt-24 sm:mt-32 xs:mb-4 sm:mb-32 sm:my-auto sm:mx-4 lg:mx-8 2xl:mx-24">
+                    <div className="flex items-center justify-center gap-12">
+                      <LoadingSpinner />
+                    </div>
+                  </div>
+                }
+              >
+                <API />
+              </Suspense>
+            }
+          ></Route>
           <Route
             path="/resultspage/:filterParam/:searchParam"
-            element={<VirusResultsPage />}
+            element={
+              <Suspense
+                fallback={
+                  <div className="min-h-screen xs:mt-24 sm:mt-32 xs:mb-4 sm:mb-32 sm:my-auto sm:mx-4 lg:mx-8 2xl:mx-24">
+                    <div className="flex items-center justify-center gap-12">
+                      <LoadingSpinner />
+                    </div>
+                  </div>
+                }
+              >
+                <VirusResultsPage />
+              </Suspense>
+            }
           ></Route>
           <Route
             path="/proteinresultspage/:filterParam/:searchParam"

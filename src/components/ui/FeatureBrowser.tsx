@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "feature-viewer-typescript/src/styles/styles.scss";
 import * as soda from "@sodaviz/soda";
 import { Chart } from "@sodaviz/soda";
-import * as d3 from "d3";
 import "/src/customScrollBar.css";
 import {
   CustomRenderParams,
