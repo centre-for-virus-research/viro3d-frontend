@@ -77,8 +77,3 @@ export class Viro3DChart extends soda.Chart<Viro3DRenderParams> {
     }
   }
 }
-
-{/* 
-  1. Update genome coordinates in database to add group layer (groupID == family)
-  2. Update logic in rendering the chart by changing object destructuring to account for new group layer
-*/}
