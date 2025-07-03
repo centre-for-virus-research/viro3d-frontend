@@ -2,12 +2,12 @@ import "./App.css";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import About from "./pages/About";
-const API = lazy(() => import("./pages/API"));
+import API from "./pages/API";
 import Home from "./pages/Home";
 const NotFound = lazy(() => import("./pages/NotFound"));
 import ProteinResultsPage from "./pages/ProteinResultsPage";
 import StructureIndex from "./pages/StructureIndex";
-const VirusResultsPage = lazy(() => import("./pages/VirusResultsPage"));
+import VirusResultsPage from "./pages/VirusResultsPage";
 import Footer from "./components/ui/Footer";
 import LoadingSpinner from "./components/ui/LoadingSpinner";
 import Navbar from "./components/Navbar";
@@ -47,37 +47,10 @@ function App() {
               </Suspense>
             }
           ></Route>
-          <Route
-            path="/docs"
-            element={
-              <Suspense
-                fallback={
-                  <div className="min-h-screen xs:mt-24 sm:mt-32 xs:mb-4 sm:mb-32 sm:my-auto sm:mx-4 lg:mx-8 2xl:mx-24">
-                    <div className="flex items-center justify-center gap-12">
-                      <LoadingSpinner />
-                    </div>
-                  </div>
-                }
-              >
-                <API />
-              </Suspense>
-            }
-          ></Route>
+          <Route path="/docs" element={<API />}></Route>
           <Route
             path="/resultspage/:filterParam/:searchParam"
-            element={
-              <Suspense
-                fallback={
-                  <div className="min-h-screen xs:mt-24 sm:mt-32 xs:mb-4 sm:mb-32 sm:my-auto sm:mx-4 lg:mx-8 2xl:mx-24">
-                    <div className="flex items-center justify-center gap-12">
-                      <LoadingSpinner />
-                    </div>
-                  </div>
-                }
-              >
-                <VirusResultsPage />
-              </Suspense>
-            }
+            element={<VirusResultsPage />}
           ></Route>
           <Route
             path="/proteinresultspage/:filterParam/:searchParam"
