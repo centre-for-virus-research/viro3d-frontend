@@ -1,6 +1,4 @@
-import React, { useEffect, createRef } from "react";
-import { PDBeMolstarPlugin } from "pdbe-molstar/lib";
-import { InitParams } from "pdbe-molstar/lib/spec";
+import React, { useEffect, useRef, useState } from "react";
 import { api_url } from "../../utils/api";
 
 type Model = {
@@ -8,57 +6,62 @@ type Model = {
   defaultModel: string;
 };
 
+declare global {
+  interface Window {
+    PDBeMolstarPlugin: any;
+  }
+}
+
 const PDBeMolStar: React.FC<Model> = ({ defaultModel, modelID }) => {
-  const viewerContainerRef = createRef<HTMLDivElement>();
+  const viewerContainerRef = useRef<HTMLDivElement>(null);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
 
   useEffect(() => {
-    function init() {
-      const url = `${api_url}/api/pdb/${defaultModel}-${modelID}.cif`;
+    const scriptId = "pdbe-molstar-script";
 
-      const pluginInstance = new PDBeMolstarPlugin();
-
-      //Set options (Checkout available options list in the documentation)
-      const options: Partial<InitParams> = {
-        customData: {
-          url: url,
-          format: "cif",
-          binary: false,
-        },
-        hideCanvasControls: [
-          "selection",
-          "animation",
-          "expand",
-          "controlToggle",
-          // 'controlInfo'
-        ],
-        alphafoldView: true,
-        bgColor: { r: 242, g: 242, b: 242 },
-        hideControls: true,
-        sequencePanel: true,
-        reactive: true,
-        hideStructure: ["het", "water", "nonStandard", "carbs", "coarse"],
-        //remove comment-out on line below to disable ball and stick from showing when you select a residue
-        granularity: "residueInstances",
-      };
-
-      if (viewerContainerRef.current === null) return;
-
-      //Call render method to display the 3D view
-      pluginInstance.render(viewerContainerRef.current, options);
+    // Prevent loading the script more than once
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement("script");
+      script.id = scriptId;
+      script.src = "https://www.ebi.ac.uk/pdbe/pdbe-molstar/build/pdbe-molstar-plugin.js";
+      script.async = true;
+      script.onload = () => setScriptLoaded(true);
+      script.onerror = () => console.error("Failed to load PDBeMolstar plugin script");
+      document.body.appendChild(script);
+    } else {
+      setScriptLoaded(true);
     }
-    init();
-  }, [modelID]);
+  }, []);
+
+  useEffect(() => {
+    if (!scriptLoaded || !viewerContainerRef.current || !window.PDBeMolstarPlugin) return;
+
+    const url = `${api_url}/api/pdb/${defaultModel}-${modelID}.cif`;
+    const pluginInstance = new window.PDBeMolstarPlugin();
+
+    const options = {
+      customData: {
+        url,
+        format: "cif",
+        binary: false,
+      },
+      hideCanvasControls: ["selection", "animation", "expand", "controlToggle"],
+      alphafoldView: true,
+      bgColor: { r: 242, g: 242, b: 242 },
+      hideControls: true,
+      sequencePanel: true,
+      reactive: true,
+      hideStructure: ["het", "water", "nonStandard", "carbs", "coarse"],
+      granularity: "residueInstances",
+    };
+
+    pluginInstance.render(viewerContainerRef.current, options);
+  }, [scriptLoaded, modelID]);
 
   return (
-    <>
-      <div className="relative xs:h-[90%] md:h-[100%]  ">
-        <div
-          id="pdbeMolstar"
-          ref={viewerContainerRef}
-          style={{ border: "0px" }}
-        ></div>
-      </div>
-    </>
+    <div className="relative xs:h-[90%] md:h-[100%]">
+      <div id="pdbeMolstar" ref={viewerContainerRef} style={{ border: "0px" }} />
+    </div>
   );
 };
 
