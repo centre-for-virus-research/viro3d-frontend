@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 const ClustersContainer = lazy(() => import("../components/ClustersContainer"));
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 import PdbeMolstar from "../components/ui/PdbeMolstar";
@@ -14,6 +14,7 @@ import { api_url } from "../utils/api";
 
 const StructureIndex: React.FC = () => {
   const { filterParam, searchParam } = useParams();
+  const navigate = useNavigate();
 
   const { coordinates, isLoading: genomeLoading } = useGenomeCoordinates(
     "virus_name",
@@ -26,6 +27,7 @@ const StructureIndex: React.FC = () => {
 
   const {
     proteinInfo,
+    isLoading,
     defaultModel,
     isESMFoldModelPresent,
     handleCollabFoldClick,
@@ -39,7 +41,7 @@ const StructureIndex: React.FC = () => {
   return (
     <>
       <div className="min-h-screen xs:mt-24 sm:mt-32 xs:mb-4 sm:mb-32 sm:my-auto sm:mx-4 lg:mx-8 2xl:mx-24">
-        {!proteinInfo ? (
+        {!proteinInfo && isLoading ? (
           <div className="min-h-screen">
             <div className="flex items-center justify-center gap-12">
               <LoadingSpinner />
@@ -172,6 +174,12 @@ const StructureIndex: React.FC = () => {
             <p className="mb-12 xs:text-4xl sm:text-5xl text-slate-500">
               Error: No data to display
             </p>
+            <button
+              onClick={() => navigate(-1)}
+              className="xs:text-4xl sm:text-5xl text-slate-500 underline"
+            >
+              Go Back
+            </button>
           </div>
         )}
       </div>
