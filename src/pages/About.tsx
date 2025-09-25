@@ -325,20 +325,44 @@ const About: React.FC = () => {
             database is designed to support fundamental research into viral
             protein structure, function, and evolution, as well as to explore
             the contribution of viruses to overall protein structure diversity.
-            For a detailed technical description and an example of what can be
-            discovered using Viro3D please see our pre-print:
-          </p>
+            For technical details and examples, see our manuscript. If you use Viro3D in your research, please cite:
+            <br />
           <a
-            href="https://www.biorxiv.org/content/10.1101/2024.12.19.629443v1"
+            href="https://doi.org/10.1038/s44320-025-00147-9"
             target="_blank"
             rel="noreferrer"
             className={`xs:text-xl lg:text-3xl text-[#4a95c0] hover:text-[#50bde5] xs:text-center md:text-left hover:underline ${
               isMobile ? "underline" : ""
             } font-semibold`}
           >
-            Viro3D: a comprehensive database of virus protein structure
-            predictions
+          Litvin U, Lytras S, Jack A, Robertson DL, Hughes J, Grove J. Viro3D: a comprehensive database of virus protein structure predictions. Mol Syst Biol. 2025 Sep 16. doi: 10.1038/s44320-025-00147-9. PMID: 40958060.
           </a>
+          </p>
+          <p className="xs:text-xl lg:text-3xl text-[#6d828d]">Full data dumps are available for download on Zenodo:
+          <br />
+          <a
+            href="https://zenodo.org/records/15622906"
+                        target="_blank"
+            rel="noreferrer"
+            className={`xs:text-xl lg:text-3xl text-[#4a95c0] hover:text-[#50bde5] xs:text-center md:text-left hover:underline ${
+              isMobile ? "underline" : ""
+            } font-semibold`}
+          >
+            Metadata, ColabFold Predictions and Foldseek database
+          </a> and&nbsp;
+          <a
+            href="https://zenodo.org/records/15745595"
+                        target="_blank"
+            rel="noreferrer"
+            className={`xs:text-xl lg:text-3xl text-[#4a95c0] hover:text-[#50bde5] xs:text-center md:text-left hover:underline ${
+              isMobile ? "underline" : ""
+            } font-semibold`}
+          >
+            ESMFold Predictions and ColabFold PAE data
+          </a>          
+          </p>
+
+
           <div className="flex xs:text-lg lg:text-xl xs:flex-col xs:gap-4 lg:flex-row justify-evenly mt-8 mb-8">
             <TabButton
               selectTab={() =>
